@@ -1,0 +1,549 @@
+
+
+postgres=# help
+You are using psql, the command-line interface to PostgreSQL.
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help with psql commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+postgres=# \dt
+Did not find any relations.
+postgres=# \dl
+      Large objects
+ ID | Owner | Description
+----+-------+-------------
+(0 rows)
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \c template1
+psql (13.4, server 14.1)
+WARNING: psql major version 13, server major version 14.
+         Some psql features might not work.
+You are now connected to database "template1" as user "postgres".
+template1=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+template1=# \dt
+Did not find any relations.
+template1=# CREATE DATABASE prueba;
+CREATE DATABASE
+template1=# \c prueba
+psql (13.4, server 14.1)
+WARNING: psql major version 13, server major version 14.
+         Some psql features might not work.
+You are now connected to database "prueba" as user "postgres".
+prueba=# DROP DATABASE prueba;
+ERROR:  cannot drop the currently open database
+prueba=# \c template1
+psql (13.4, server 14.1)
+WARNING: psql major version 13, server major version 14.
+         Some psql features might not work.
+You are now connected to database "template1" as user "postgres".
+template1=# drop database prueba;
+DROP DATABASE
+template1=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+template1=# create db prueba;
+ERROR:  syntax error at or near "db"
+LINE 1: create db prueba;
+               ^
+template1=# create database prueba;
+CREATE DATABASE
+template1=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ prueba    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(4 rows)
+
+template1=# drop database prueba;
+DROP DATABASE
+template1=# create database prueba;
+CREATE DATABASE
+template1=# \c prueba
+psql (13.4, server 14.1)
+WARNING: psql major version 13, server major version 14.
+         Some psql features might not work.
+You are now connected to database "prueba" as user "postgres".
+prueba=# create table empleados (DNI integer PRIMARY KEY, nombre varchar(20) NOT NULL, NSS integer UNIQUE NOT NULL);
+CREATE TABLE
+prueba=# \t
+Tuples only is on.
+prueba=# \dt
+ public | empleados | table | postgres
+
+prueba=# insert into empleados(DNI, nombre, NSS) VALUES (1, 'Maria', 1234);
+INSERT 0 1
+prueba=# SELECT * FROM empleados;
+   1 | Maria  | 1234
+
+prueba=# select * from empleados;
+   1 | Maria  | 1234
+
+prueba=# insert into empleados(DNI, nombre, NSS) VALUES (2, 'Juan', 1233);
+INSERT 0 1
+prueba=# create table empleados2 (DNI integer PRIMARY KEY, nombre varchar(20) NOT NULL, NSS integer KEY);
+ERROR:  syntax error at or near "KEY"
+LINE 1: ... PRIMARY KEY, nombre varchar(20) NOT NULL, NSS integer KEY);
+                                                                  ^
+prueba=# create table empleados2(DNI integer, nombre varchar(20), apellidos(40), NSS integer, PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS), NOT NULL(nombre,apellidos,NSS));
+ERROR:  syntax error at or near "("
+LINE 1: ...leados2(DNI integer, nombre varchar(20), apellidos(40), NSS ...
+                                                             ^
+prueba=# create table empleados2(DNI integer, nombre varchar(20), apellidos varchar(40), NSS integer, PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS), NOT NULL(nombre,apellidos,NSS));
+ERROR:  syntax error at or near "NOT"
+LINE 1: ..., PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS), NOT NULL(n...
+                                                             ^
+prueba=# create table empleados2(DNI integer, nombre varchar(20), apellidos varchar(40), NSS integer, PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS), NOTNULL(nombre,apellidos,NSS));
+ERROR:  syntax error at or near "NOTNULL"
+LINE 1: ..., PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS), NOTNULL(no...
+                                                             ^
+prueba=# create table empleados2(DNI integer, nombre varchar(20), apellidos varchar(40), NSS integer, PRIMARY KEY(DNI), UNIQUE(nombre,apellidos,NSS));
+CREATE TABLE
+prueba=# \t
+Tuples only is off.
+prueba=# \dt
+           List of relations
+ Schema |    Name    | Type  |  Owner
+--------+------------+-------+----------
+ public | empleados  | table | postgres
+ public | empleados2 | table | postgres
+(2 rows)
+
+prueba=# select * from empleados2;
+ dni | nombre | apellidos | nss
+-----+--------+-----------+-----
+(0 rows)
+
+prueba=# drop table empleados2
+prueba-# prueba=#INSERT INTO empleados (DNI, nombre, NSS) VALUES
+(2,’Juan’,1233);
+ERROR:  syntax error at or near "prueba"
+LINE 2: prueba=#INSERT INTO empleados (DNI, nombre, NSS) VALUES
+        ^
+prueba=#
+prueba=#
+prueba=#
+prueba=#
+prueba=#
+prueba=# select * from empleados
+prueba-# ;
+ dni | nombre | nss
+-----+--------+------
+   1 | Maria  | 1234
+   2 | Juan   | 1233
+(2 rows)
+
+prueba=# INSERT INTO empleados (DNI, nombre, NSS) VALUES
+(3,’Josefa’,1222);
+ERROR:  column "’josefa’" does not exist
+LINE 2: (3,’Josefa’,1222);
+           ^
+prueba=# insert into empleados(DNI, nombre, NSS) VALUES (3,'Josefa',1222);
+INSERT 0 1
+prueba=# select * from empleados;
+ dni | nombre | nss
+-----+--------+------
+   1 | Maria  | 1234
+   2 | Juan   | 1233
+   3 | Josefa | 1222
+(3 rows)
+
+prueba=# insert into empleados(DNI, nombre, NSS) VALUES (4,'MARIA',1211);
+INSERT 0 1
+prueba=# select * from empleados;
+ dni | nombre | nss
+-----+--------+------
+   1 | Maria  | 1234
+   2 | Juan   | 1233
+   3 | Josefa | 1222
+   4 | MARIA  | 1211
+(4 rows)
+
+prueba=# insert into empleados(DNI,nombre,NSS) VALUES (5, 'Mario', 1212);
+INSERT 0 1
+prueba=# select * from empleados;
+ dni | nombre | nss
+-----+--------+------
+   1 | Maria  | 1234
+   2 | Juan   | 1233
+   3 | Josefa | 1222
+   4 | MARIA  | 1211
+   5 | Mario  | 1212
+(5 rows)
+
+prueba=# select DNI from empleados;
+ dni
+-----
+   1
+   2
+   3
+   4
+   5
+(5 rows)
+
+prueba=# select nombre from empleados;M
+ nombre
+--------
+ Maria
+ Juan
+ Josefa
+ MARIA
+ Mario
+(5 rows)
+
+prueba-# select nombre from empleados where UPPER(nombre)='Maria';
+ERROR:  syntax error at or near "M"
+LINE 1: M
+        ^
+prueba=# select nombre from empleados where UPPER(nombre)="Maria";
+ERROR:  column "Maria" does not exist
+LINE 1: select nombre from empleados where UPPER(nombre)="Maria";
+                                                         ^
+prueba=# select nombre from empleados where UPPER(nombre)=Maria;
+ERROR:  column "maria" does not exist
+LINE 1: select nombre from empleados where UPPER(nombre)=Maria;
+                                                         ^
+prueba=# select nombre from empleados where UPPER(nombre)='Maria';
+ nombre
+--------
+(0 rows)
+
+prueba=# select nombre from empleados where upper(nombre)='Maria';
+ nombre
+--------
+(0 rows)
+
+prueba=# select nombre from empleados;
+ nombre
+--------
+ Maria
+ Juan
+ Josefa
+ MARIA
+ Mario
+(5 rows)
+
+prueba=# select nombre from empleados where nombre="Maria";
+ERROR:  column "Maria" does not exist
+LINE 1: select nombre from empleados where nombre="Maria";
+                                                  ^
+prueba=# select nombre from empleados where nombre='Maria';
+ nombre
+--------
+ Maria
+(1 row)
+
+prueba=# select nombre from empleados where upper(nombre)='Maria';
+ nombre
+--------
+(0 rows)
+
+prueba=# update empleados set nombre='Maria Josefa' where dni=3;
+UPDATE 1
+prueba=# select * from empleados;
+ dni |    nombre    | nss
+-----+--------------+------
+   1 | Maria        | 1234
+   2 | Juan         | 1233
+   4 | MARIA        | 1211
+   5 | Mario        | 1212
+   3 | Maria Josefa | 1222
+(5 rows)
+
+prueba=# delete from empleados where dni=1;
+DELETE 1
+prueba=# alter table empleados add column apellidos varchar(20) NOT NULL, add column FechaNacimiento date, add column Calle varchar(20), add column Ciudad varchar(20), add column Sueldo integer;
+ERROR:  column "apellidos" of relation "empleados" contains null values
+prueba=# alter table empleados add column apellidos varchar(20), add column FechaNacimiento date, add column Calle varchar(20), add column Ciudad varchar(20), add column Sueldo integer;
+ALTER TABLE
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | ciudad | sueldo
+-----+--------------+------+-----------+-----------------+-------+--------+--------
+   2 | Juan         | 1233 |           |                 |       |        |
+   4 | MARIA        | 1211 |           |                 |       |        |
+   5 | Mario        | 1212 |           |                 |       |        |
+   3 | Maria Josefa | 1222 |           |                 |       |        |
+(4 rows)
+
+prueba=# create table DEPARTAMENTOS (Id_dpto integer primary key, Nombre varchar(50) unique not null);
+CREATE TABLE
+prueba=# select * from departamentos
+prueba-# select * from DEPARTAMENTOS;
+ERROR:  syntax error at or near "select"
+LINE 2: select * from DEPARTAMENTOS;
+        ^
+prueba=# select * from departamentos;
+ id_dpto | nombre
+---------+--------
+(0 rows)
+
+prueba=# insert into departamentos values (1, 'Departamento 1');
+INSERT 0 1
+prueba=# insert into departamentos values (2, 'Departamento 2');
+INSERT 0 1
+prueba=# select * from departamentos;
+ id_dpto |     nombre
+---------+----------------
+       1 | Departamento 1
+       2 | Departamento 2
+(2 rows)
+
+prueba=# alter table empleados add column id_dpto foreign key;
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add column id_dpto foreign key;
+                                                 ^
+prueba=# alter table empleados add column id_dpto FOREIGN KEY;
+ERROR:  syntax error at or near "FOREIGN"
+LINE 1: alter table empleados add column id_dpto FOREIGN KEY;
+                                                 ^
+prueba=# alter table empleados add column id_dpto;
+ERROR:  syntax error at or near ";"
+LINE 1: alter table empleados add column id_dpto;
+                                                ^
+prueba=# alter table empleados add column id_dpto integer foreign key;
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add column id_dpto integer foreign key...
+                                                         ^
+prueba=# alter table empleados add column id_dpto integer;
+ALTER TABLE
+prueba=# alter table edit column
+prueba-# ;
+ERROR:  syntax error at or near "column"
+LINE 1: alter table edit column
+                         ^
+prueba=# alter table empleados remove column id_dpto
+prueba-# ;
+ERROR:  syntax error at or near "remove"
+LINE 1: alter table empleados remove column id_dpto
+                              ^
+prueba=# alter table empleados drop column id_dpto
+;
+ALTER TABLE
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | c
+iudad | sueldo
+-----+--------------+------+-----------+-----------------+-------+--
+------+--------
+   2 | Juan         | 1233 |           |                 |       |
+      |
+   4 | MARIA        | 1211 |           |                 |       |
+      |
+   5 | Mario        | 1212 |           |                 |       |
+      |
+   3 | Maria Josefa | 1222 |           |                 |       |
+      |
+(4 rows)
+
+prueba=# alter table empleados add column id_dpto integer
+prueba-# ;
+ALTER TABLE
+prueba=# alter table empleados foreign key id_dpto, references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados foreign key id_dpto, references depart...
+                              ^
+prueba=# alter table empleados add foreign key id_dpto, references departamentos(id_dpto);
+ERROR:  syntax error at or near "id_dpto"
+LINE 1: alter table empleados add foreign key id_dpto, references de...
+                                              ^
+prueba=# alter table empleados add constraint foreign key id_dpto, references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add constraint foreign key id_dpto, re...
+                                             ^
+prueba=# alter table empleados add constraint foreign key id_dpto, add constraint references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add constraint foreign key id_dpto, ad...
+                                             ^
+prueba=# alter table empleados add table_constraint foreign key id_dpto, add constraint references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add table_constraint foreign key id_dp...
+                                                   ^
+prueba=# alter table empleados add constraint foreign key id_dpto, add constraint references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add constraint foreign key id_dpto, ad...
+                                             ^
+prueba=# alter table empleados add constraint foreign key id_dpto, add constraint references departamentos(id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add constraint foreign key id_dpto, ad...
+                                             ^
+prueba=# ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY(id_dpto), ADD CONSTRAINT REFERENCES departamentos(id_dpto);
+ERROR:  syntax error at or near "FOREIGN"
+LINE 1: ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY(id_dpto), A...
+                                             ^
+prueba=# ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY (id_dpto), ADD CONSTRAINT REFERENCES departamentos (id_dpto);
+ERROR:  syntax error at or near "FOREIGN"
+LINE 1: ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY (id_dpto), ...
+                                             ^
+prueba=# ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY (id_dpto), ADD CONSTRAINT REFERENCES departamentos (id_dpto);
+ERROR:  syntax error at or near "FOREIGN"
+LINE 1: ALTER TABLE empleados ADD CONSTRAINT FOREIGN KEY (id_dpto), ...
+                                             ^
+prueba=# alter table empleados add constraint foreign key (id_dpto), add constraint references departamentos (id_dpto);
+ERROR:  syntax error at or near "foreign"
+LINE 1: alter table empleados add constraint foreign key (id_dpto), ...
+                                             ^
+prueba=# alter table empleados add constraint fk_id_dpto foreign key (id_dpto), add constraint references departamentos (id_dpto);
+ERROR:  syntax error at or near ","
+LINE 1: ...os add constraint fk_id_dpto foreign key (id_dpto), add cons...
+                                                             ^
+prueba=# alter table empleados add constraint fk_id_dpto foreign key (id_dpto) add constraint references departamentos (id_dpto);
+ERROR:  syntax error at or near "add"
+LINE 1: ...s add constraint fk_id_dpto foreign key (id_dpto) add constr...
+                                                             ^
+prueba=# alter table empleados add constraint fk_id_dpto foreign key (id_dpto) references departamentos (id_dpto);
+ALTER TABLE
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | c
+iudad | sueldo | id_dpto
+-----+--------------+------+-----------+-----------------+-------+--
+------+--------+---------
+   2 | Juan         | 1233 |           |                 |       |
+      |        |
+   4 | MARIA        | 1211 |           |                 |       |
+      |        |
+   5 | Mario        | 1212 |           |                 |       |
+      |        |
+   3 | Maria Josefa | 1222 |           |                 |       |
+      |        |
+(4 rows)
+
+prueba=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Acc
+ess privileges
+-----------+----------+----------+-------------+-------------+------
+-----------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ prueba    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/po
+stgres          +
+           |          |          |             |             | postg
+res=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/po
+stgres          +
+           |          |          |             |             | postg
+res=CTc/postgres
+(4 rows)
+
+prueba=# \dt
+             List of relations
+ Schema |     Name      | Type  |  Owner
+--------+---------------+-------+----------
+ public | departamentos | table | postgres
+ public | empleados     | table | postgres
+ public | empleados2    | table | postgres
+(3 rows)
+
+prueba=# update empleados set id_dpto=1 where dni=1
+prueba-# ;
+UPDATE 0
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | c
+iudad | sueldo | id_dpto
+-----+--------------+------+-----------+-----------------+-------+--
+------+--------+---------
+   2 | Juan         | 1233 |           |                 |       |
+      |        |
+   4 | MARIA        | 1211 |           |                 |       |
+      |        |
+   5 | Mario        | 1212 |           |                 |       |
+      |        |
+   3 | Maria Josefa | 1222 |           |                 |       |
+      |        |
+(4 rows)
+
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | ciudad | sueldo | id_dpto
+-----+--------------+------+-----------+-----------------+-------+--------+--------+---------
+   2 | Juan         | 1233 |           |                 |       |        |        |
+   4 | MARIA        | 1211 |           |                 |       |        |        |
+   5 | Mario        | 1212 |           |                 |       |        |        |
+   3 | Maria Josefa | 1222 |           |                 |       |        |        |
+(4 rows)
+
+prueba=# update empleados set id_dpto=1 where dni=2
+;
+UPDATE 1
+prueba=# select * from empleados;
+ dni |    nombre    | nss  | apellidos | fechanacimiento | calle | ciudad | sueldo | id_dpto
+-----+--------------+------+-----------+-----------------+-------+--------+--------+---------
+   4 | MARIA        | 1211 |           |                 |       |        |        |
+   5 | Mario        | 1212 |           |                 |       |        |        |
+   3 | Maria Josefa | 1222 |           |                 |       |        |        |
+   2 | Juan         | 1233 |           |                 |       |        |        |       1
+(4 rows)
+
+prueba=# update empleados set id_dpto=2 where dni=3;
+UPDATE 1
+prueba=# update empleados set id_dpto=3 where dni=4;
+ERROR:  insert or update on table "empleados" violates foreign key constraint "fk_id_dpto"
+DETAIL:  Key (id_dpto)=(3) is not present in table "departamentos".
+prueba=# select nombre,id_dpto from empleados
+prueba-# ;
+    nombre    | id_dpto
+--------------+---------
+ MARIA        |
+ Mario        |
+ Juan         |       1
+ Maria Josefa |       2
+(4 rows)
+
+prueba=# select * from departamentos;
+ id_dpto |     nombre
+---------+----------------
+       1 | Departamento 1
+       2 | Departamento 2
+(2 rows)
+
+prueba=# select dni,nombre from empleados,departamentos;
+ERROR:  column reference "nombre" is ambiguous
+LINE 1: select dni,nombre from empleados,departamentos;
+                   ^
+prueba=# select dni,departamentos(nombre) from empleados;
+ERROR:  function departamentos(character varying) does not exist
+LINE 1: select dni,departamentos(nombre) from empleados;
+                   ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+prueba=# select dni,nombre from empleados;
+ dni |    nombre
+-----+--------------
+   4 | MARIA
+   5 | Mario
+   2 | Juan
+   3 | Maria Josefa
+(4 rows)
+
+prueba=# select
