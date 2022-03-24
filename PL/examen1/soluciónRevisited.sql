@@ -20,7 +20,7 @@ having count(m.nombre) >= 2;
     select nombre from material
 ) except (
     select m.nombre from materialorigen as mo 
-    inner join origen as o on (o.id = mo.id_origen)
+    inner join material as m on (m.id = mo.id_origen)
 );
 
 -- 5. Presenta aquellos materiales que provengan de dos lugares y aquellos que vengan de 'Rusia' (UNION).
