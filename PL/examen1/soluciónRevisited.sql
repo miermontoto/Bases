@@ -56,3 +56,4 @@ where not exists(
         where lower(m2.nombre) = 'niquel'
     )
 );
+
