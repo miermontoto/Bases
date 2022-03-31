@@ -286,7 +286,7 @@ create or replace procedure getEstudiantesIngenieriaIndustrial() as $$
             select estudiante_nombre, estudiante_apellidos from estudiante est
             inner join estudiante_grado_modulo egm using(estudiante_id)
             inner join grado gra using(grado_id)
-            where lower(gra.grado_nombre) = 'Ingenieria Quimica Industrial'
+            where lower(gra.grado_nombre) = 'ingenieria quimica industrial'
             union
             select estudiante_nombre, estudiante_apellidos from estudiante est where
             est.erasmus=true
