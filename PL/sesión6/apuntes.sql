@@ -276,11 +276,10 @@ call getCapacidadTotalAula(0);
 #### Ejercicio 3.2
 */
 
--- Procedimiento que devuelva una lista con los nombres y apellidos de aquellos estudiantes
+    -- Procedimiento que devuelva una lista con los nombres y apellidos de aquellos estudiantes
 -- que estén cursando 'Ingeniería Quimica Industrial' y también aquellos que estén en erasmus.
 create or replace procedure getEstudiantesIngenieriaIndustrial() as $$
     declare r record;
-
     begin
         for r in
             select estudiante_nombre, estudiante_apellidos from estudiante est
