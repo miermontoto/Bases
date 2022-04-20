@@ -1,0 +1,13 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "/home/JuanMier/uo/y2t2/Bases/PL/sesión8/postgresql-42.3.2.jar",
+            "/home/JuanMier/uo/y2t2/Bases/PL/sesión8/**/*.jar"
+        ],
+        "exclude": [
+            "/Proyecto-SesionJDBC/D:/Docencia/CursoAcademico2021-2022/Bases de Datos-GITIN/Laboratorios - Grupo español/Proyecto-SesionJDBC/postgresql-42.3.2.jar"
+        ]
+    },
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m"
+}
