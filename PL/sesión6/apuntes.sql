@@ -276,16 +276,20 @@ call getCapacidadTotalAula(0);
 #### Ejercicio 3.2
 */
 
--- Procedimiento que devuelva una lista con los nombres y apellidos de aquellos estudiantes
+    -- Procedimiento que devuelva una lista con los nombres y apellidos de aquellos estudiantes
 -- que estén cursando 'Ingeniería Quimica Industrial' y también aquellos que estén en erasmus.
 create or replace procedure getEstudiantesIngenieriaIndustrial() as $$
     declare r record;
+<<<<<<< HEAD
         begin
+=======
+    begin
+>>>>>>> 43c76e5e9fbe158c7c6253c6b6a9cedfef53665a
         for r in
             select estudiante_nombre, estudiante_apellidos from estudiante est
             inner join estudiante_grado_modulo egm using(estudiante_id)
             inner join grado gra using(grado_id)
-            where lower(gra.grado_nombre) = 'Ingenieria Quimica Industrial'
+            where lower(gra.grado_nombre) = 'ingenieria quimica industrial'
             union
             select estudiante_nombre, estudiante_apellidos from estudiante est where
             est.erasmus=true
