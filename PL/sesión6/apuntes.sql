@@ -280,8 +280,7 @@ call getCapacidadTotalAula(0);
 -- que estén cursando 'Ingeniería Quimica Industrial' y también aquellos que estén en erasmus.
 create or replace procedure getEstudiantesIngenieriaIndustrial() as $$
     declare r record;
-
-    begin
+        begin
         for r in
             select estudiante_nombre, estudiante_apellidos from estudiante est
             inner join estudiante_grado_modulo egm using(estudiante_id)
