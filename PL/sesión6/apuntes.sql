@@ -280,23 +280,19 @@ call getCapacidadTotalAula(0);
 -- que estén cursando 'Ingeniería Quimica Industrial' y también aquellos que estén en erasmus.
 create or replace procedure getEstudiantesIngenieriaIndustrial() as $$
     declare r record;
-<<<<<<< HEAD
-        begin
-=======
-    begin
->>>>>>> 43c76e5e9fbe158c7c6253c6b6a9cedfef53665a
-        for r in
-            select estudiante_nombre, estudiante_apellidos from estudiante est
-            inner join estudiante_grado_modulo egm using(estudiante_id)
-            inner join grado gra using(grado_id)
-            where lower(gra.grado_nombre) = 'ingenieria quimica industrial'
-            union
-            select estudiante_nombre, estudiante_apellidos from estudiante est where
-            est.erasmus=true
-        loop
-            raise notice '% %', r.estudiante_nombre, r.estudiante_apellidos;
-        end loop;
-    end;
+begin
+    for r in
+        select estudiante_nombre, estudiante_apellidos from estudiante est
+        inner join estudiante_grado_modulo egm using(estudiante_id)
+        inner join grado gra using(grado_id)
+        where lower(gra.grado_nombre) = 'ingenieria quimica industrial'
+        union
+        select estudiante_nombre, estudiante_apellidos from estudiante est where
+        est.erasmus=true
+    loop
+        raise notice '% %', r.estudiante_nombre, r.estudiante_apellidos;
+    end loop;
+end;
 $$ language plpgsql;
 call getEstudiantesIngenieriaIndustrial();
 -- Resultado:

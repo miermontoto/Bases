@@ -1,42 +1,31 @@
 /*markdown
 # Práctica 9
-
 ## Teoría
-
 ### Dominio
-
 El dominio es un tipo de dato al que se le puede atribuir restricciones opcionales sobre el conjunto de valores que se le podrían asignar.
-
 ```sql
 -- Ejemplo de dominio para direcciones de correo electrónico.
 create domain domainEmail as text
 check(
     value ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'
 );
-
 -- Ejemplo de dominio para códigos postales
 create domain domainPostCode as text
 check(
     value ~ '^[0-9]{5}$'
 );
 ```
-
 ### Restricciones
 - #### Restricciones de columna
-
     Un valor en una cierta columna debe satisfacer una expresión, y se especifica después del tipo de dato.
-
     ```sql
     -- Ejemplo
     create table productos(
         precio numeric constraint precio_positivo check (precio > 0)
     );
     ```
-
 - #### Restricciones de tabla
-
     Se hacen varias restricciones de columna sobre una misma tabla.
-
     ```sql
     -- Ejemplo
     create table productos(
@@ -45,19 +34,16 @@ check(
         constraint cantidad_precio_positivo check (cantidad * precio > 0) -- EJEMPLO!
     );
     ```
-
 - #### default
 - #### not null
 - #### null
 - #### unique
 - #### primary key
   Equivalente a 'unique not null'.
-
   *Puede haber más de una clave primaria, es decir, que la clave primaria de la tabla sea la concatenación de ambas.*
 - #### foreign key
   Representa la integridad referencial entre dos tablas.
 - #### on update cascade / on delete cascade
-
 ## Práctica
 ### Ejercicio 1.
 */
