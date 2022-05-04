@@ -4,13 +4,11 @@
 ### Triggers
 #### Definición
 Un trigger es una función que se ejecuta cuando se produce un evento en la base de datos.
-
  - Se ejecuta una sola vez, y se puede ejecutar antes o después de una acción.
  - Trabaja sobre una sola tabla.
  - Niveles:
     - **Nivel-sentencia:** el trigger es llamado una vez por cada operación, independientemente del número de filas que modifique.
     - **Nivel-fila:** el trigger es llamado una vez por cada fila que modifique.
-
 #### Sintaxis
 ```sql
 CREATE OR REPLACE TRIGGER [nombre] [AFTER|BEFORE] [INSERT|UPDATE|DELETE] ON [tabla]
@@ -18,13 +16,11 @@ CREATE OR REPLACE TRIGGER [nombre] [AFTER|BEFORE] [INSERT|UPDATE|DELETE] ON [tab
     [WHEN (condición)]
     EXECUTE PROCEDURE [nombre_procedimiento] ([parametros])
 ```
-
 #### Procedimientos asociados a triggers
  - Tiene que ser creado e instalado antes de la definición del trigger.
  - Puede ser usado por diferentes triggers y procedimientos.
  - Si varios triggers están asociados al mismo evento, se ejecutan en orden alfabético.
  - Pueden llamar a otro trigger, con un impacto en el rendimiento.
-
 #### Variables especiales
  - **NEW**: contiene la nueva tupla para ser actualizada.
  - **OLD**: contiene la tupla antigua para ser actualizada.
@@ -33,7 +29,6 @@ CREATE OR REPLACE TRIGGER [nombre] [AFTER|BEFORE] [INSERT|UPDATE|DELETE] ON [tab
     - **TG_LEVEL** (varchar): Retorna `STATEMENT` o `ROW`.
     - **TG_OP** (varchar): Retorna `INSERT`, `UPDATE` o `DELETE`.
     - **TG_TABLE** (varchar): Retorna el nombre de la tabla.
-
 ### Ejemplos
 #### Ejemplo: Trigger a nivel-fila
 ```sql
@@ -43,12 +38,10 @@ begin
     return new;
 end;
 $$ language plpgsql;
-
 create trigger tg_fecha_modificada 
 before insert on clientes for each row
 execute procedure modifica_fecha();
 ```
-
 #### Ejemplo: Trigger a nivel-sentencia
 ```sql
 create or replace function check_cliente() returns trigger as $$
@@ -59,7 +52,7 @@ begin
     return null;
 end;
 $$ language plpgsql;
-
+--
 create or replace trigger tg_check_cliente
 befor insert on clientes
 for each statement
