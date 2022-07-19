@@ -150,3 +150,18 @@ where not exists (
     inner join invention as t using (id_invention)
     where t.invention_year < 1945 and p.id_inventor = tp.id_inventor
 );
+
+select distinct *
+from inventor as p
+where not exists (
+    (
+        select id_invention
+        from invention
+    ) except (
+        select tp.id_invention
+        from inventioninventor as tp
+        inner join invention as t1 using (id_invention)
+        inner join inventor as p1 using (id_inventor)
+        where (t1.invention_year > 1945 or p.id_inventor != p1.id_inventor)
+    )
+);
